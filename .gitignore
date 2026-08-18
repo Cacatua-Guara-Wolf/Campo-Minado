@@ -1,3 +1,7 @@
 .env
+.rar
+.zip
+.tar
+.7z
 node_modules
 config.json

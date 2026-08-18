@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const EMOJI = require('../../common/emojis.js');
 
 module.exports = {
@@ -22,20 +22,35 @@ module.exports = {
 		),
 	
 	async execute(interaction) {
+		const leave_button = new ButtonBuilder()
+			.setLabel('Abandonar')
+			.setStyle(ButtonStyle.Danger);
+
+		const buttons = new ActionRowBuilder().addComponents(leave_button);
+
 		const rows = interaction.options.getInteger('linhas') || 7;
 		const columns = interaction.options.getInteger('colunas') || 7;
-		let board = '';
+		const board = blank_board(rows, columns)
 
-		for (let i = 0; i < rows; i++) {
-			for (let j = 0; j < columns; j++) {
-				board += EMOJI.HIDDEN
-			}
-
-			if (i < rows) {
-				board += '\n'
-			}
-		}
-
-		await interaction.reply(board);
+		await interaction.reply({
+			content: board,
+			components: [ buttons ]
+		});
 	},
 };
+
+function blank_board(rows, columns){
+	let board = '';
+
+	for (let i = 0; i < rows; i++) {
+		for (let j = 0; j < columns; j++) {
+			board += EMOJI.HIDDEN
+		}
+
+		if (i < rows) {
+			board += '\n'
+		}
+	}
+
+	return board;
+}

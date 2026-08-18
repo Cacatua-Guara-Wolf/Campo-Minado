@@ -1,7 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
-const ANSI = require('../../common/ansi.js');
 const fs = require('fs');
 const path = require('path');
+const ANSI = require('../../common/ansi.js');
+const { time: TIME } = require('../../common/time.js');
 
 const findCommandFile = (commandName) => {
 	const commandsDir = path.join(__dirname, '..');
@@ -58,6 +59,8 @@ module.exports = {
 			try {
 				const deployPath = path.join(__dirname, '../../deploy-commands.js');
 				delete require.cache[require.resolve(deployPath)];
+
+				console.log(`${TIME()} ${ANSI.YELLOW}${interaction.user.username} solicitou deploy geral via comando /reload${ANSI.RESET}`)
 				require(deployPath);
 				
 				await interaction.reply('Todos os comandos foram recarregados com sucesso!');
@@ -65,7 +68,7 @@ module.exports = {
 			} catch (error) {
 				console.error(`${ANSI.RED}[ERRO]${ANSI.RESET} Ao fazer deploy dos comandos: ${ANSI.RED}${error}${ANSI.RESET}`);
 				await interaction.reply(
-					`Houve um erro ao recarregar todos os caomandos:\n\`${error.message}\``
+					`Houve um erro ao recarregar todos os comandos:\n\`${error.message}\``
 				);
 
 				return;
