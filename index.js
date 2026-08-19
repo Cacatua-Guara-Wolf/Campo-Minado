@@ -4,7 +4,13 @@ const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
 const ANSI = require('./common/ansi.js');
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
+	],
+});
 
 client.commands = new Collection();
 client.cooldowns = new Collection();
@@ -20,8 +26,6 @@ for (const folder of commandFolders) {
 		const command = require(filePath);
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
-		} else {
-			console.log(`${ANSI.YELLOW}[AVISO]${ANSI.RESET} O comando em ${filePath} está faltando uma propriedade "data" ou "execute".`);
 		}
 	}
 }
