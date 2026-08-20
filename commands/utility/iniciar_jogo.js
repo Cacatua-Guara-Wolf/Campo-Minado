@@ -98,7 +98,7 @@ function blank_board(rows, columns) {
 }
 
 async function game_action_play(confirmation, rows, columns) {
-	await require('../../game/play.js').first_move({
+	await require('../../game/play.js').move({
 		interaction: confirmation,
 		rows,
 		columns

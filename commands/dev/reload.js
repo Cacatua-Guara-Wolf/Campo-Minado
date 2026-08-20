@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const ANSI = require('../../common/ansi.js');
-const { time: TIME } = require('../../common/time.js');
+const { console_log } = require('../../common/console.js');
 
 const findCommandFile = (commandName) => {
 	const commandsDir = path.join(__dirname, '..');
@@ -60,13 +60,13 @@ module.exports = {
 				const deployPath = path.join(__dirname, '../../deploy-commands.js');
 				delete require.cache[require.resolve(deployPath)];
 
-				console.log(`${TIME()} ${ANSI.YELLOW}${interaction.user.username} solicitou deploy geral via comando /reload${ANSI.RESET}`)
+				console_log(`${ANSI.YELLOW}${interaction.user.username} solicitou deploy geral via comando /reload${ANSI.RESET}`)
 				require(deployPath);
 				
 				await interaction.reply('Todos os comandos foram recarregados com sucesso!');
 				return;
 			} catch (error) {
-				console.error(`${ANSI.RED}[ERRO]${ANSI.RESET} Ao fazer deploy dos comandos: ${ANSI.RED}${error}${ANSI.RESET}`);
+				console_log(`Ao fazer deploy dos comandos: ${ANSI.RED}${error}${ANSI.RESET}`, 'error');
 				await interaction.reply(
 					`Houve um erro ao recarregar todos os comandos:\n\`${error.message}\``
 				);
@@ -94,7 +94,7 @@ module.exports = {
 			interaction.client.commands.set(newCommand.data.name, newCommand);
 			await interaction.reply(`O comando \`${newCommand.data.name}\` foi recarregado!`);
 		} catch (error) {
-			console.error(`${ANSI.RED}[ERRO]${ANSI.RESET} Recarregar comando ${ANSI.RED}${command.data.name}${ANSI.RESET} disparou: ${ANSI.RED}${error}${ANSI.RESET}`);
+			console_log(`Recarregar comando ${ANSI.RED}${command.data.name}${ANSI.RESET} disparou: ${ANSI.RED}${error}${ANSI.RESET}`, 'error');
 			await interaction.reply(
 				`Houve um erro ao recarregar o comando \`${command.data.name}\`:\n\`${error.message}\``
 			);

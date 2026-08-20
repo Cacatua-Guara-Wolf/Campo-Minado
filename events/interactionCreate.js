@@ -1,4 +1,5 @@
 const { Events, MessageFlags, Collection } = require('discord.js');
+const { console_log } = require('../common/console.js');
 const ANSI = require('../common/ansi.js');
 
 module.exports = {
@@ -9,7 +10,7 @@ module.exports = {
 		const command = interaction.client.commands.get(interaction.commandName);
 
 		if (!command) {
-			console.error(`${ANSI.RED}Nenhum comando ${interaction.commandName} foi encontrado.${ANSI.RESET}`);
+			console_log(`Nenhum comando ${interaction.commandName} foi encontrado.`, 'error');
 			return;
 		}
 
@@ -22,15 +23,15 @@ module.exports = {
 		const now = Date.now();
 		const timestamps = cooldowns.get(command.data.name);
 		const defaultCooldownDuration = 3;
-		const cooldownAmount = (command.cooldown ?? defaultCooldownDuration) * 1_000;
+		const cooldownAmount = (command.cooldown ?? defaultCooldownDuration) * 1000;
 
 		if (timestamps.has(interaction.user.id)) {
 			const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
 
 			if (now < expirationTime) {
-				const expiredTimestamp = Math.round(expirationTime / 1_000);
+				const expiredTimestamp = Math.round(expirationTime / 1000);
 				return interaction.reply({
-					content: `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
+					content: `Aquieta, \`/${command.data.name}\` ainda está em _cooldown_. Você pode utilizar novamente: <t:${expiredTimestamp}:R>.`,
 					flags: MessageFlags.Ephemeral,
 				});
 			}
@@ -42,7 +43,7 @@ module.exports = {
 		try {
 			await command.execute(interaction);
 		} catch (error) {
-			console.error(error);
+			console_log(`Não foi possível executar o comando: ${ANSI.RED}${error}${ANSI.RESET}`, 'error');
 			if (interaction.replied || interaction.deferred) {
 				await interaction.followUp({
 					content: 'Houve um erro ao tentar executar este comando!',
