@@ -10,5 +10,6 @@ module.exports = {
 	'N8': '<:8:933475206524182538>',
 	'HIDDEN': '<:h:933475206457085973>',
 	'FLAG': '<:f:933475206306091019>',
-	'BOMB': '<:b:933475206830358578>'
+	'BOMB': '<:b:933475206830358578>',
+	'LOAD': '<a:L_:1539861695558844417>' // Remember to add the "a" before the id, it's an animated emoji
 }

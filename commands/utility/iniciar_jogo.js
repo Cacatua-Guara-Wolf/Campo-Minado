@@ -45,8 +45,8 @@ module.exports = {
 
 		const rows = interaction.options.getInteger('linhas') || 7;
 		const columns = interaction.options.getInteger('colunas') || 7;
-		// Piso da média entre linhas e colunas ± 1
-		const bomb_count = Math.floor((rows + columns) / 2) + (Math.round(Math.random()) * (Math.random > 0.5 ? 1 : -1))
+		// // Piso da média entre linhas e colunas ± 1
+		// const bomb_count = Math.floor((rows + columns) / 2) + (Math.round(Math.random()) * (Math.random > 0.5 ? 1 : -1))
 		const board = blank_board(rows, columns)
 
 		const response = await interaction.reply({
@@ -64,7 +64,7 @@ module.exports = {
 
 			switch(confirmation.customId) {
 				case 'play':
-					game_action_play(confirmation, board);
+					game_action_play(confirmation, rows, columns);
 					break;
 
 				case 'flag':
@@ -97,20 +97,11 @@ function blank_board(rows, columns) {
 	return board;
 }
 
-async function game_action_play(confirmation, board) {
-	await confirmation.update({
-		content: board,
-		components: []
-	});
-
-	await confirmation.followUp({
-		content: 'Em que posição você deseja jogar? (por exemplo, A1 ou H9)',
-		ephemeral: true
-	});
-
-	await require('../../game/play.js').play({
+async function game_action_play(confirmation, rows, columns) {
+	await require('../../game/play.js').first_move({
 		interaction: confirmation,
-		board,
+		rows,
+		columns
 	});
 }
 
